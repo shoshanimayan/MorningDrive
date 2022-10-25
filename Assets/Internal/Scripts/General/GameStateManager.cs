@@ -23,7 +23,6 @@ namespace General
         private DrawOnTexture _window;
 
 
-        private bool _showTip = false;
         private void Awake()
         {
             _sceneLoader = GetComponent<SceneLoader>();
@@ -37,15 +36,6 @@ namespace General
             _sceneLoader.FirstLoad();
         }
 
-        private async void ShowTipWithWait(int seconds)
-        {
-            await Task.Delay(seconds*1000);
-            _uIHandler.ShowHintText();
-            _showTip = true;
-        }
-
-        // Update is called once per frame
-       
 
 
         public GameState State
@@ -63,18 +53,20 @@ namespace General
                 {
                     case GameState.Menu:
                         _uIHandler.ShowMenuUI();
+                        _window.SetClearAge(10);
                         _window.SetRadius(0);
                         break;
                     case GameState.Loading:
                         break;
                     case GameState.Ending:
+                        _window.SetRadius(0);
                         _uIHandler.ShowEndGameUI();
                         break;
                     case GameState.Playing:
                         _window.SetRadius(10);
-                        _window.SetClearAge(10);
                         _uIHandler.StartGameUI();
-                        ShowTipWithWait(3);
+                        _gameplayManger.MaxTime = _uIHandler.GetLengthValueSet();
+                        _gameplayManger.StartGame();
                         break;
                 }
             }
@@ -89,6 +81,11 @@ namespace General
         public void ToMenu()
         {
             State = GameState.Menu;
+        }
+
+        public void ToEnd()
+        {
+            State = GameState.Ending;
         }
 
         public void ToPlay()

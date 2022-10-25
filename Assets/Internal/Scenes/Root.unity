@@ -2086,7 +2086,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: To MEnu
+  m_text: To Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 29cdf932e77af7e4d83ec8288c6d2339, type: 2}
   m_sharedMaterial: {fileID: 8724470524492929129, guid: 29cdf932e77af7e4d83ec8288c6d2339, type: 2}
@@ -2633,6 +2633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a71ca01c12a1854ba9d58a8a7168da4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _progressSlider: {fileID: 90255631}
 --- !u!114 &1501123182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2896,7 +2897,7 @@ CanvasGroup:
   m_GameObject: {fileID: 1758924706}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 0
+  m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &1758924709

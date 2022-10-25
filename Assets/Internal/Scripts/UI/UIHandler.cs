@@ -23,6 +23,7 @@ namespace UI
 
         private GameStateManager _gameState;
         private float _gameLengthTextValue=1;
+        private bool _showTip = false;
 
         private void Awake()
         {
@@ -32,6 +33,17 @@ namespace UI
             _gameUI.enabled = false;
             _hintUI.enabled = false;
 
+        }
+
+      
+        private void Update()
+        {
+            
+            if (_showTip && Input.GetMouseButtonUp(0))
+            {
+                _showTip = false;
+                HideHintText();
+            }
         }
 
         private async Task FadeInOut(CanvasGroup canvas, bool fade)
@@ -47,7 +59,7 @@ namespace UI
                     await Task.Yield();
 
                 }
-
+                canvas.gameObject.GetComponent<Canvas>().enabled = false;
 
             }
             else
@@ -64,10 +76,14 @@ namespace UI
             }
         }
 
-       
 
-        
-       
+        private async void ShowTipWithWait(int seconds)
+        {
+            await Task.Delay(seconds * 1000);
+            ShowHintText();
+        }
+
+
         private void HideAllUI() {
             if (_loadingUI.enabled)
             {
@@ -77,28 +93,26 @@ namespace UI
             if (_menuUI.enabled)
             {
                 Task t = FadeInOut(_menuUI.GetComponent<CanvasGroup>(), true);
-              //  t.Wait();
-                _menuUI.enabled = false;
+              
             }
             if (_endUI.enabled)
             {
                 Task t = FadeInOut(_endUI.GetComponent<CanvasGroup>(), true);
-              //  t.Wait();
-                _endUI.enabled = false;
+
+               
             }
-            if(_gameUI.enabled)
+            if (_gameUI.enabled)
             {
                 Task t = FadeInOut(_gameUI.GetComponent<CanvasGroup>(), true);
-              //  t.Wait();
-                _gameUI.enabled = false;
+
+                
             }
-            
+           
+
         }
         public void HideHintText()
         {
             Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), true);
-           // t.Wait();
-            _hintUI.enabled = false;
         }
         public void ShowMenuUI() 
         {
@@ -113,14 +127,19 @@ namespace UI
         public void ShowEndGameUI()
         {
             HideAllUI();
+            _showTip = false;
+            HideHintText();
+
             _endUI.enabled = true;
             Task t = FadeInOut(_endUI.GetComponent<CanvasGroup>(), false);
 
         }
 
-        public void ShowHintText() {
+        public  void ShowHintText() {
             _hintUI.enabled = true;
-            Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), false);
+             Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), false);
+            _showTip = true;
+
         }
 
         public void StartGameUI() {
@@ -128,7 +147,7 @@ namespace UI
 
             _gameUI.enabled = true;
             Task t = FadeInOut(_gameUI.GetComponent<CanvasGroup>(), false);
-
+            ShowTipWithWait(5);
         }
 
 
