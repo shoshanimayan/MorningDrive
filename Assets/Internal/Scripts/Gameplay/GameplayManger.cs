@@ -1,35 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using General;
 
-public class GameplayManger : MonoBehaviour
+namespace GamePlay
 {
-
-    private float _maxTime = 60;
-
-
-    private UIHandler _uIHandler;
-    // Start is called before the first frame update
-    void Start()
+    public class GameplayManger : MonoBehaviour
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        private float _maxTime = 60;
+        private GameStateManager _gameState;
+        private EnvironmentHandler _environmentHandler;
 
-
-    public float MaxTime {
-        get { return _maxTime; }
-        private set
+        private void Awake()
         {
-            if (value == _maxTime/60)
-                return;
-            _maxTime = value * 60;
+            _gameState = GetComponent<GameStateManager>();
+            _environmentHandler = GetComponent<EnvironmentHandler>();
         }
 
+        public float MaxTime
+        {
+            get { return _maxTime; }
+            private set
+            {
+                if (value == _maxTime / 60)
+                    return;
+                _maxTime = value * 60;
+            }
+
+        }
     }
 }
