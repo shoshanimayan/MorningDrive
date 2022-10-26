@@ -13,6 +13,9 @@ namespace General
 
     public class GameStateManager : MonoBehaviour
     {
+
+        [SerializeField] private AudioSource _music;
+
         private GameState _state = GameState.Loading;
 
         private SceneLoader _sceneLoader;
@@ -55,6 +58,7 @@ namespace General
                         _uIHandler.ShowMenuUI();
                         _window.SetClearAge(10);
                         _window.SetRadius(0);
+                        _music.Play();
                         break;
                     case GameState.Loading:
                         break;
@@ -67,6 +71,7 @@ namespace General
                         _uIHandler.StartGameUI();
                         _gameplayManger.MaxTime = _uIHandler.GetLengthValueSet();
                         _gameplayManger.StartGame();
+                        _music.Stop();
                         break;
                 }
             }
