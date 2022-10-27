@@ -67,7 +67,7 @@ namespace UI
                 canvas.alpha = 0;
                 while (canvas.alpha < 1)
                 {
-                    canvas.alpha += Time.deltaTime*.5f;
+                    canvas.alpha += Time.deltaTime;
                    
                     await Task.Yield();
 

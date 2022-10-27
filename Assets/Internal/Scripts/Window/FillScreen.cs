@@ -12,6 +12,7 @@ public class FillScreen : MonoBehaviour
         _res = Screen.currentResolution;
         _cam = Camera.main;
         ObjectFillScreen();
+        transform.parent = _cam.transform;
 
     }
 

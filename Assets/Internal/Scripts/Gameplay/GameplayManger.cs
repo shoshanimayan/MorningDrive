@@ -36,11 +36,7 @@ namespace GamePlay
                     StartTweensWithWait(5);
                     _carAudio.Play();
                 }
-                else
-                {
-                    _environmentHandler.KillTweens();
-                    _carAudio.Stop();
-                }
+               
             
             }
         
@@ -52,6 +48,7 @@ namespace GamePlay
         {
             _gameState = GetComponent<GameStateManager>();
             _environmentHandler = GetComponent<EnvironmentHandler>();
+            _camera = Camera.main;
         }
 
         private async Task RunProgress() 
@@ -77,8 +74,7 @@ namespace GamePlay
             {
                 float x = Random.Range(-1f, 1f) * magnitude;
                 float y = Random.Range(-1f, 1f) * magnitude;
-
-                transform.position = new Vector3(x, y, -10f);
+                _camera.transform.position = new Vector3(x, y, -10f);
                 elapsed += Time.deltaTime;
                 await Task.Yield();
             }
@@ -95,6 +91,8 @@ namespace GamePlay
 
         private void EndGame()
         {
+            _environmentHandler.KillTweens();
+            _carAudio.Stop();
             Playing = false;
             _gameState.ToEnd();
         
@@ -103,14 +101,13 @@ namespace GamePlay
         private void CameraShake()
         {
             _speedBumbAudio.Play();
-            Shake(1,.5f);
+            Shake(.5f,.1f);
         }
 
         private async void SetCameraShake()
         {
             float time = Random.Range(30f, MaxTime-10);
-            time = (time / 60)*1000;
-
+            time = (time )*1000;
             await Task.Delay((int)time);
             CameraShake();
         }
