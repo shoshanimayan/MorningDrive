@@ -21,6 +21,8 @@ namespace General
         private SceneLoader _sceneLoader;
         private GameplayManger _gameplayManger;
         private UIHandler _uIHandler;
+        private ScrollTextureHandler _scrollTextureHandler { get { return ScrollTextureHandler.Instance; } }
+
 
 
         private DrawOnTexture _window;
@@ -65,6 +67,9 @@ namespace General
                     case GameState.Ending:
                         _window.SetRadius(0);
                         _uIHandler.ShowEndGameUI();
+                        _scrollTextureHandler.MyState = _state;
+
+
                         break;
                     case GameState.Playing:
                         _window.SetRadius(10);
@@ -72,6 +77,7 @@ namespace General
                         _gameplayManger.MaxTime = _uIHandler.GetLengthValueSet();
                         _gameplayManger.StartGame();
                         _music.Stop();
+                        _scrollTextureHandler.MyState = _state;
                         break;
                 }
             }

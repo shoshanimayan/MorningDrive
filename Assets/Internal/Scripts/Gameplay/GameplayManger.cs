@@ -67,7 +67,7 @@ namespace GamePlay
 
         private async void Shake(float duration, float magnitude)
         {
-            Vector3 orignalPosition = _camera.transform.position;
+            Vector3 orignalPosition = _camera.transform.position; 
             float elapsed = 0f;
 
             while (elapsed < duration)
@@ -78,7 +78,7 @@ namespace GamePlay
                 elapsed += Time.deltaTime;
                 await Task.Yield();
             }
-            transform.position = orignalPosition;
+            _camera.transform.position = orignalPosition;
         }
 
     
