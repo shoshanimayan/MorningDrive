@@ -20,7 +20,6 @@ namespace General
 
         private AssetReference _envScene;
 
-        [SerializeField]
 
         /////////////////////////
         //  PRIVATE VARIABLES  //
@@ -29,7 +28,6 @@ namespace General
         private bool _unloaded;
         private GameStateManager _gameState;
        
-
         ///////////////////////
         //  PRIVATE METHODS  //
         ///////////////////////
@@ -56,15 +54,10 @@ namespace General
         private void FirstSceneLoadCompleted(AsyncOperationHandle<SceneInstance> obj)
         {
             if (obj.Status == AsyncOperationStatus.Succeeded)
-            {
-                
+            {  
                 Addressables.LoadSceneAsync(_envScene, UnityEngine.SceneManagement.LoadSceneMode.Additive).Completed += SceneLoadCompleted;
-
-
             }
         }
-
-      
 
         //////////////////
         //  PUBLIC API  //
@@ -73,9 +66,7 @@ namespace General
         public void FirstLoad()
         {
             Addressables.LoadSceneAsync(_firstScene, UnityEngine.SceneManagement.LoadSceneMode.Additive).Completed += FirstSceneLoadCompleted;
-
         }
 
-       
     }
 }

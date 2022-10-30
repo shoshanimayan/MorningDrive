@@ -74,7 +74,7 @@ namespace GamePlay
             {
                 float x = Random.Range(-1f, 1f) * magnitude;
                 float y = Random.Range(-1f, 1f) * magnitude;
-                _camera.transform.position = new Vector3(x, y, -10f);
+                _camera.transform.position = new Vector3(orignalPosition.x+ x, orignalPosition.y+ y, orignalPosition.z);
                 elapsed += Time.deltaTime;
                 await Task.Yield();
             }
@@ -95,13 +95,12 @@ namespace GamePlay
             _carAudio.Stop();
             Playing = false;
             _gameState.ToEnd();
-        
         }
 
         private void CameraShake()
         {
             _speedBumbAudio.Play();
-            Shake(.5f,.1f);
+            Shake(.5f,.2f);
         }
 
         private async void SetCameraShake()
@@ -121,7 +120,6 @@ namespace GamePlay
                     return;
                 _maxTime = value * 60;
             }
-
         }
 
        

@@ -23,8 +23,6 @@ namespace General
         private UIHandler _uIHandler;
         private ScrollTextureHandler _scrollTextureHandler { get { return ScrollTextureHandler.Instance; } }
 
-
-
         private DrawOnTexture _window;
 
 
