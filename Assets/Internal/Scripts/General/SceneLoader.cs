@@ -26,28 +26,23 @@ namespace General
         /////////////////////////
         private AsyncOperationHandle<SceneInstance> _handle;
         private bool _unloaded;
-        private GameStateManager _gameState;
-       
+        private GameStateManager _gameState { get { return GameStateManager.Instance; } }
+
         ///////////////////////
         //  PRIVATE METHODS  //
         ///////////////////////
-        private void Awake()
-        {
-            _gameState = GetComponent<GameStateManager>();
-
-            Application.targetFrameRate = 90;
-        }
+        
 
         private void SceneLoadCompleted(AsyncOperationHandle<SceneInstance> obj)
         {
             if (obj.Status == AsyncOperationStatus.Succeeded)
             {
-                var window = GameObject.Find("window");
-                if (window)
-                {
-                    _gameState.SetWindow(window.GetComponent<DrawOnTexture>());
+               // var window = GameObject.Find("window");
+             //   if (window)
+              //  {
+                //    _gameState.SetWindow(window.GetComponent<DrawOnTexture>());
                     _gameState.State = GameState.Menu;
-                }
+              //  }
             }
         }
 

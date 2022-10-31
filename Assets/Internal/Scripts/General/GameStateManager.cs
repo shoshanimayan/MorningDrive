@@ -5,32 +5,36 @@ using System.Threading.Tasks;
 using UI;
 using UnityEngine;
 using Window;
-
+using Audio;
 public enum GameState { Loading, Menu, Playing, Ending }
 
 namespace General
 {
 
-    public class GameStateManager : MonoBehaviour
+    public class GameStateManager : Singleton<GameStateManager>
     {
 
-        [SerializeField] private AudioSource _music;
 
-        private GameState _state = GameState.Loading;
+        private GameState _state= GameState.Loading;
 
         private SceneLoader _sceneLoader;
         private GameplayManger _gameplayManger;
         private UIHandler _uIHandler;
-        private ScrollTextureHandler _scrollTextureHandler { get { return ScrollTextureHandler.Instance; } }
-
         private DrawOnTexture _window;
+
+
+        private ScrollTextureHandler _scrollTextureHandler { get { return ScrollTextureHandler.Instance; } }
+        private AudioManager _audioManager { get { return AudioManager.Instance; } }
 
 
         private void Awake()
         {
+            Application.targetFrameRate = 90;
+
             _sceneLoader = GetComponent<SceneLoader>();
             _gameplayManger = GetComponent<GameplayManger>();
             _uIHandler = GetComponent<UIHandler>();
+            _uIHandler.ShowLoadingUI();
         }
 
         // Start is called before the first frame update
@@ -39,7 +43,7 @@ namespace General
             _sceneLoader.FirstLoad();
         }
 
-
+        public float PlayLength=1;
 
         public GameState State
         {
@@ -58,23 +62,27 @@ namespace General
                         _uIHandler.ShowMenuUI();
                         _window.SetClearAge(10);
                         _window.SetRadius(0);
-                        _music.Play();
+                        _audioManager.PlayMusicAudio();
                         break;
+
                     case GameState.Loading:
+                        _uIHandler.ShowLoadingUI();
                         break;
+
                     case GameState.Ending:
+                        _audioManager.StopCarAudio();
                         _window.SetRadius(0);
                         _uIHandler.ShowEndGameUI();
                         _scrollTextureHandler.MyState = _state;
-
-
                         break;
+
                     case GameState.Playing:
                         _window.SetRadius(10);
                         _uIHandler.StartGameUI();
-                        _gameplayManger.MaxTime = _uIHandler.GetLengthValueSet();
+                        _gameplayManger.MaxTime = PlayLength;
                         _gameplayManger.StartGame();
-                        _music.Stop();
+                        _audioManager.StopMusicAudio();
+                        _audioManager.PlayCarAudio();
                         _scrollTextureHandler.MyState = _state;
                         break;
                 }

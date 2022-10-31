@@ -11,27 +11,29 @@ namespace UI
     public class UIHandler : MonoBehaviour
     {
         [Header("Canvases")]
-        [SerializeField] Canvas _loadingUI;
-        [SerializeField] Canvas _menuUI;
-        [SerializeField] Canvas _endUI;
-        [SerializeField] Canvas _gameUI;
-        [SerializeField] Canvas _hintUI;
+        [SerializeField] private Canvas _loadingUI;
+        [SerializeField] private Canvas _menuUI;
+        [SerializeField] private Canvas _endUI;
+        [SerializeField] private Canvas _gameUI;
+        [SerializeField] private Canvas _hintUI;
+
+        [Header("Loading Sphere")]
+        [SerializeField] private GameObject _loadingSphere;
 
         [Header("Main Menu Elements")]
         [SerializeField] TextMeshProUGUI _LengthText;
 
 
-        private GameStateManager _gameState;
-        private float _gameLengthTextValue=1;
+        private GameStateManager _gameState { get { return GameStateManager.Instance; } }
         private bool _showTip = false;
 
         private void Awake()
         {
-            _gameState = GetComponent<GameStateManager>();
             _menuUI.enabled = false;
             _endUI.enabled = false;
             _gameUI.enabled = false;
             _hintUI.enabled = false;
+            _loadingUI.enabled = false;
 
         }
 
@@ -83,11 +85,14 @@ namespace UI
             ShowHintText();
         }
 
+     
+
 
         private void HideAllUI() {
             if (_loadingUI.enabled)
             {
                 _loadingUI.enabled = false;
+                _loadingSphere.SetActive(false);
             }
 
             if (_menuUI.enabled)
@@ -135,6 +140,13 @@ namespace UI
 
         }
 
+        public void ShowLoadingUI()
+        {
+            HideAllUI();           
+            _loadingUI.enabled = true;
+            _loadingSphere.SetActive(true);
+        }
+
         public  void ShowHintText() {
             _hintUI.enabled = true;
              Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), false);
@@ -161,13 +173,10 @@ namespace UI
                 _LengthText.text = "Length: 1 minute";
 
             }
-            _gameLengthTextValue = Length.value;
+            _gameState.PlayLength = Length.value;
         }
 
-        public float GetLengthValueSet()
-        {
-            return _gameLengthTextValue;
-        }
+        
 
 
     }

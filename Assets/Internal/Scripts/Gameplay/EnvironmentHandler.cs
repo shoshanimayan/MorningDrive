@@ -15,16 +15,7 @@ namespace GamePlay
 
         [SerializeField ]private Transform _treeEndPoint;
 
-        private GameStateManager _gameState;
-
-        private void Awake()
-        {
-            _gameState = GetComponent<GameStateManager>();
-        }
-
-       
         
-
         public void KillTweens()
         {
             DOTween.KillAll(); 

@@ -10,7 +10,7 @@ namespace General {
         [SerializeField] private float _offsetY;
         [SerializeField] private float _topSpeed = 8;
 
-        private GameStateManager _gameState;
+        private GameStateManager _gameState { get { return GameStateManager.Instance; } }
 
         private Renderer _render;
         private  bool _active;
@@ -51,7 +51,6 @@ namespace General {
 
         private void Awake()
         {
-            _gameState = FindObjectOfType<GameStateManager>();
             _render = GetComponent<Renderer>();
             _topSpeed = 8;
         }

@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Audio;
+using General;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +16,13 @@ namespace Window
 		private Texture2D _texture;
 		private Camera cam;
 
+
+
+
+		private AudioManager _audioManager { get { return AudioManager.Instance; } }
+		private GameStateManager _gameStateManager { get { return GameStateManager.Instance; } }
+
+
 		void Start()
 		{
 			_texture = new Texture2D(TextureSize, TextureSize, TextureFormat.RFloat, false, true);
@@ -21,9 +30,17 @@ namespace Window
 			_texture.Apply();
 			destinationRenderer.material.SetTexture("_MouseMap", _texture);
 			destinationRenderer.material.SetFloat("_MaxAge",0);
+			_gameStateManager.SetWindow(this);
 		}
 
 
+		private void OnMouseUp()
+		{
+			if (_gameStateManager.State == GameState.Playing)
+			{
+				_audioManager.PlayWipeAudio();
+			}
+		}
 
 		private void OnMouseDrag()
 		{
@@ -32,12 +49,9 @@ namespace Window
 
 			if (Physics.Raycast(ray, out hit, 100))
 			{
-				// younger = redder (higher r)
-				// older = blacker
-				//Debug.Log("Time: " + Time.timeSinceLevelLoad + "; r: " + r);
+				
 				Color color = new Color(Time.timeSinceLevelLoad, 0, 0, 1);
-				//Debug.Log("r: " + color.r);
-				//Color color = new Color(1, 0, 0, 1);
+			
 
 				int x = (int)(hit.textureCoord.x * _texture.width);
 				int y = (int)(hit.textureCoord.y * _texture.height);

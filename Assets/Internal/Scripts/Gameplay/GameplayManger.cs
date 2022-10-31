@@ -4,6 +4,7 @@ using UnityEngine;
 using General;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using Audio;
 
 namespace GamePlay
 {
@@ -11,17 +12,18 @@ namespace GamePlay
     {
 
         [SerializeField] Slider _progressSlider;
-        [SerializeField] AudioSource _carAudio;
-        [SerializeField] AudioSource _speedBumbAudio;
+       
 
 
         private float _maxTime = 60;
         private float _timer = 0;
         private bool _playing;
 
-        private GameStateManager _gameState;
         private EnvironmentHandler _environmentHandler;
         private Camera _camera;
+
+        private AudioManager _audioManager { get { return AudioManager.Instance; } }
+        private GameStateManager _gameState { get { return GameStateManager.Instance; } }
 
 
 
@@ -34,7 +36,6 @@ namespace GamePlay
                 {
                     SetCameraShake();
                     StartTweensWithWait(5);
-                    _carAudio.Play();
                 }
                
             
@@ -46,7 +47,6 @@ namespace GamePlay
 
         private void Awake()
         {
-            _gameState = GetComponent<GameStateManager>();
             _environmentHandler = GetComponent<EnvironmentHandler>();
             _camera = Camera.main;
         }
@@ -92,14 +92,13 @@ namespace GamePlay
         private void EndGame()
         {
             _environmentHandler.KillTweens();
-            _carAudio.Stop();
             Playing = false;
             _gameState.ToEnd();
         }
 
         private void CameraShake()
         {
-            _speedBumbAudio.Play();
+            _audioManager.PlaySpeedBumpAudio();
             Shake(.5f,.2f);
         }
 
