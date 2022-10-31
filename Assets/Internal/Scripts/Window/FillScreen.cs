@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class FillScreen : MonoBehaviour
 {
+    ///////////////////////////////
+    //  PRIVATE VARIABLES         //
+    ///////////////////////////////
     private Resolution _res;
     private Camera _cam;
-    // Start is called before the first frame update
-    void Start()
+
+    ///////////////////////////////
+    //  PRIVATE METHODS           //
+    ///////////////////////////////
+    private void Start()
     {
         _res = Screen.currentResolution;
         _cam = Camera.main;
@@ -16,8 +22,7 @@ public class FillScreen : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (_res.width != Screen.width || _res.height != Screen.height)
         {
@@ -25,7 +30,8 @@ public class FillScreen : MonoBehaviour
         }  
     }
 
-    private void ObjectFillScreen() {
+    private void ObjectFillScreen()
+    {
 
         float pos = (_cam.nearClipPlane + 0.01f);
 

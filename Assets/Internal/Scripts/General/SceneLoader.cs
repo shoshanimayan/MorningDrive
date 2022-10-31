@@ -17,15 +17,12 @@ namespace General
         [SerializeField]
         private AssetReference _firstScene;
         [SerializeField]
-
         private AssetReference _envScene;
 
 
         /////////////////////////
         //  PRIVATE VARIABLES  //
         /////////////////////////
-        private AsyncOperationHandle<SceneInstance> _handle;
-        private bool _unloaded;
         private GameStateManager _gameState { get { return GameStateManager.Instance; } }
 
         ///////////////////////
@@ -37,12 +34,8 @@ namespace General
         {
             if (obj.Status == AsyncOperationStatus.Succeeded)
             {
-               // var window = GameObject.Find("window");
-             //   if (window)
-              //  {
-                //    _gameState.SetWindow(window.GetComponent<DrawOnTexture>());
+               
                     _gameState.State = GameState.Menu;
-              //  }
             }
         }
 

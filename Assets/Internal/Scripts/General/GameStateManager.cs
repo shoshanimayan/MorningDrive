@@ -14,19 +14,21 @@ namespace General
     public class GameStateManager : Singleton<GameStateManager>
     {
 
-
+        ///////////////////////////////
+        //  PRIVATE VARIABLES         //
+        ///////////////////////////////
         private GameState _state= GameState.Loading;
-
         private SceneLoader _sceneLoader;
         private GameplayManger _gameplayManger;
         private UIHandler _uIHandler;
         private DrawOnTexture _window;
 
-
         private ScrollTextureHandler _scrollTextureHandler { get { return ScrollTextureHandler.Instance; } }
         private AudioManager _audioManager { get { return AudioManager.Instance; } }
 
-
+        ///////////////////////////////
+        //  PRIVATE METHODS           //
+        ///////////////////////////////
         private void Awake()
         {
             Application.targetFrameRate = 90;
@@ -37,11 +39,15 @@ namespace General
             _uIHandler.ShowLoadingUI();
         }
 
-        // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
             _sceneLoader.FirstLoad();
         }
+
+
+        ///////////////////////////////
+        //  PUBLIC API               //
+        ///////////////////////////////
 
         public float PlayLength=1;
 

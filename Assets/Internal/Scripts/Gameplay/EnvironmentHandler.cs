@@ -9,13 +9,15 @@ namespace GamePlay
 {
     public class EnvironmentHandler : MonoBehaviour
     {
-
+        ///////////////////////////////
+        //  INSPECTOR VARIABLES      //
+        ///////////////////////////////
         [SerializeField] GameObject[] _trees;
-
-
         [SerializeField ]private Transform _treeEndPoint;
 
-        
+        ///////////////////////////////
+        //  PUBLIC API               //
+        ///////////////////////////////
         public void KillTweens()
         {
             DOTween.KillAll(); 

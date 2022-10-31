@@ -7,6 +7,9 @@ namespace Audio
 {
     public class AudioManager : Singleton<AudioManager>
     {
+        ///////////////////////////////
+        //  INSPECTOR VARIABLES      //
+        ///////////////////////////////
         [Header("Audio Sources")]
 
         [SerializeField] private AudioSource _carAudio;
@@ -16,6 +19,10 @@ namespace Audio
 
         [Header("Extra Audio Clips")]
         [SerializeField] private AudioClip _carStart;
+
+        ///////////////////////////////
+        //  PRIVATE METHODS           //
+        ///////////////////////////////
 
         private async void FadeOutAudio(AudioSource source, float fadeTime)
         {
@@ -52,6 +59,10 @@ namespace Audio
     
         }
 
+
+        ///////////////////////////////
+        //  PUBLIC API               //
+        ///////////////////////////////
 
         public async void PlayCarAudio()
         {

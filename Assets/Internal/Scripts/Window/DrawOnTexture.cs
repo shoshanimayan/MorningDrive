@@ -8,28 +8,31 @@ namespace Window
 {
 	public class DrawOnTexture : MonoBehaviour
 	{
+		///////////////////////////////
+		//  INSPECTOR VARIABLES      //
+		///////////////////////////////
+		[SerializeField] private Renderer _destinationRenderer;
+		[SerializeField] private int _textureSize;
+		[SerializeField] private float _radius;
 
-		[SerializeField] private Renderer destinationRenderer;
-		[SerializeField] private int TextureSize;
-		[SerializeField] private float Radius;
-
+		///////////////////////////////
+		//  PRIVATE VARIABLES         //
+		///////////////////////////////
 		private Texture2D _texture;
 		private Camera cam;
-
-
-
-
 		private AudioManager _audioManager { get { return AudioManager.Instance; } }
 		private GameStateManager _gameStateManager { get { return GameStateManager.Instance; } }
 
-
-		void Start()
+		///////////////////////////////
+		//  PRIVATE METHODS           //
+		///////////////////////////////
+		private void Start()
 		{
-			_texture = new Texture2D(TextureSize, TextureSize, TextureFormat.RFloat, false, true);
+			_texture = new Texture2D(_textureSize, _textureSize, TextureFormat.RFloat, false, true);
 			cam = Camera.main;
 			_texture.Apply();
-			destinationRenderer.material.SetTexture("_MouseMap", _texture);
-			destinationRenderer.material.SetFloat("_MaxAge",0);
+			_destinationRenderer.material.SetTexture("_MouseMap", _texture);
+			_destinationRenderer.material.SetFloat("_MaxAge",0);
 			_gameStateManager.SetWindow(this);
 		}
 
@@ -63,25 +66,29 @@ namespace Window
 					for (int j = 0; j < _texture.width; j++)
 					{
 						float dist = Vector2.Distance(new Vector2(i, j), new Vector2(x, y));
-						if (dist <= Radius)
+						if (dist <= _radius)
 							_texture.SetPixel(i, j, color);
 					}
 				}
 
 				_texture.Apply();
-				destinationRenderer.material.SetTexture("_MouseMap", _texture);
+				_destinationRenderer.material.SetTexture("_MouseMap", _texture);
 			}
 		}
 
+		///////////////////////////////
+		//  PUBLIC API               //
+		///////////////////////////////
+
 		public void SetClearAge(float time)
 		{
-			destinationRenderer.material.SetFloat("_MaxAge", time);
+			_destinationRenderer.material.SetFloat("_MaxAge", time);
 
 		}
 
 		public void SetRadius(float radius)
 		{
-			Radius = radius;
+			_radius = radius;
 		}
 
 	}

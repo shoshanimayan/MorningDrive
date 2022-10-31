@@ -10,11 +10,14 @@ namespace GamePlay
 {
     public class GameplayManger : MonoBehaviour
     {
-
+        ///////////////////////////////
+        //  INSPECTOR VARIABLES      //
+        ///////////////////////////////
         [SerializeField] Slider _progressSlider;
-       
 
-
+        ///////////////////////////////
+        //  PRIVATE VARIABLES         //
+        ///////////////////////////////
         private float _maxTime = 60;
         private float _timer = 0;
         private bool _playing;
@@ -25,25 +28,9 @@ namespace GamePlay
         private AudioManager _audioManager { get { return AudioManager.Instance; } }
         private GameStateManager _gameState { get { return GameStateManager.Instance; } }
 
-
-
-        public bool Playing {
-            get { return _playing; }
-            private set {
-                if (_playing == value)
-                    return;
-                if (value)
-                {
-                    SetCameraShake();
-                    StartTweensWithWait(5);
-                }
-               
-            
-            }
-        
-        }
-
-
+        ///////////////////////////////
+        //  PRIVATE METHODS           //
+        ///////////////////////////////
 
         private void Awake()
         {
@@ -81,8 +68,6 @@ namespace GamePlay
             _camera.transform.position = orignalPosition;
         }
 
-    
-
         private async void StartTweensWithWait(int seconds)
         {
             await Task.Delay(seconds * 1000);
@@ -110,18 +95,38 @@ namespace GamePlay
             CameraShake();
         }
 
+       
+        ///////////////////////////////
+        //  PUBLIC API               //
+        ///////////////////////////////
+        public bool Playing
+        {
+            get { return _playing; }
+            private set
+            {
+                if (_playing == value)
+                    return;
+                if (value)
+                {
+                    SetCameraShake();
+                    StartTweensWithWait(5);
+                }
+
+
+            }
+
+        }
+
         public float MaxTime
         {
             get { return _maxTime; }
-             set
+            set
             {
                 if (value == _maxTime / 60)
                     return;
                 _maxTime = value * 60;
             }
         }
-
-       
 
         public void StartGame()
         {

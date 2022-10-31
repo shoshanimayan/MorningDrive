@@ -10,6 +10,10 @@ namespace UI
 {
     public class UIHandler : MonoBehaviour
     {
+
+        ///////////////////////////////
+        //  INSPECTOR VARIABLES      //
+        ///////////////////////////////
         [Header("Canvases")]
         [SerializeField] private Canvas _loadingUI;
         [SerializeField] private Canvas _menuUI;
@@ -23,7 +27,9 @@ namespace UI
         [Header("Main Menu Elements")]
         [SerializeField] TextMeshProUGUI _LengthText;
 
-
+        ///////////////////////////////
+        //  PRIVATE VARIABLES         //
+        ///////////////////////////////
         private GameStateManager _gameState { get { return GameStateManager.Instance; } }
         private bool _showTip = false;
 
@@ -78,15 +84,11 @@ namespace UI
             }
         }
 
-
         private async void ShowTipWithWait(int seconds)
         {
             await Task.Delay(seconds * 1000);
             ShowHintText();
         }
-
-     
-
 
         private void HideAllUI() {
             if (_loadingUI.enabled)
@@ -115,6 +117,11 @@ namespace UI
            
 
         }
+
+        ///////////////////////////////
+        //  PUBLIC API               //
+        ///////////////////////////////
+
         public void HideHintText()
         {
             Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), true);
@@ -175,9 +182,6 @@ namespace UI
             }
             _gameState.PlayLength = Length.value;
         }
-
-        
-
 
     }
 }
