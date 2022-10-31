@@ -18,7 +18,7 @@ namespace GamePlay
         ///////////////////////////////
         //  PRIVATE VARIABLES         //
         ///////////////////////////////
-        private float _maxTime = 60;
+        private float _maxTime ;
         private float _timer = 0;
         private bool _playing;
 
@@ -26,7 +26,8 @@ namespace GamePlay
         private Camera _camera;
 
         private AudioManager _audioManager { get { return AudioManager.Instance; } }
-        private GameStateManager _gameState { get { return GameStateManager.Instance; } }
+         private GameStateManager _gameState { get { return GameStateManager.Instance; } }
+        private GameState _currentState;
 
         ///////////////////////////////
         //  PRIVATE METHODS           //
@@ -34,6 +35,8 @@ namespace GamePlay
 
         private void Awake()
         {
+
+            _currentState = Resources.Load<GameState>("CurrentState");
             _environmentHandler = GetComponent<EnvironmentHandler>();
             _camera = Camera.main;
         }
@@ -89,7 +92,8 @@ namespace GamePlay
 
         private async void SetCameraShake()
         {
-            float time = Random.Range(30f, MaxTime-10);
+
+            float time = Random.Range(30f, _maxTime-10);
             time = (time )*1000;
             await Task.Delay((int)time);
             CameraShake();
@@ -117,20 +121,12 @@ namespace GamePlay
 
         }
 
-        public float MaxTime
-        {
-            get { return _maxTime; }
-            set
-            {
-                if (value == _maxTime / 60)
-                    return;
-                _maxTime = value * 60;
-            }
-        }
+       
 
         public void StartGame()
         {
             _timer = 0;
+            _maxTime = _currentState.PlayLength * 60;
             Playing = true;
             Task t = RunProgress();
         }

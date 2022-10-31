@@ -35,15 +35,23 @@ namespace General
             if (obj.Status == AsyncOperationStatus.Succeeded)
             {
                
-                    _gameState.State = GameState.Menu;
+                    _gameState.State = GameStateType.Menu;
+            }
+            else
+            {
+                throw new Exception("failed to load addressable");
             }
         }
 
         private void FirstSceneLoadCompleted(AsyncOperationHandle<SceneInstance> obj)
         {
             if (obj.Status == AsyncOperationStatus.Succeeded)
-            {  
+            {
                 Addressables.LoadSceneAsync(_envScene, UnityEngine.SceneManagement.LoadSceneMode.Additive).Completed += SceneLoadCompleted;
+            }
+            else
+            {
+                throw new Exception("failed to load addressable");
             }
         }
 

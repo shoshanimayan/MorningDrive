@@ -30,11 +30,14 @@ namespace UI
         ///////////////////////////////
         //  PRIVATE VARIABLES         //
         ///////////////////////////////
-        private GameStateManager _gameState { get { return GameStateManager.Instance; } }
+      ///  private GameStateManager _gameState { get { return GameStateManager.Instance; } }
         private bool _showTip = false;
+        private GameState _currentState;
 
         private void Awake()
         {
+            _currentState = Resources.Load<GameState>("CurrentState");
+
             _menuUI.enabled = false;
             _endUI.enabled = false;
             _gameUI.enabled = false;
@@ -128,7 +131,7 @@ namespace UI
         }
         public void ShowMenuUI() 
         {
-
+           
             HideAllUI();
             _menuUI.enabled = true;
 
@@ -163,7 +166,6 @@ namespace UI
 
         public void StartGameUI() {
             HideAllUI();
-
             _gameUI.enabled = true;
             Task t = FadeInOut(_gameUI.GetComponent<CanvasGroup>(), false);
             ShowTipWithWait(5);
@@ -180,7 +182,7 @@ namespace UI
                 _LengthText.text = "Length: 1 minute";
 
             }
-            _gameState.PlayLength = Length.value;
+            _currentState.PlayLength = Length.value;
         }
 
     }

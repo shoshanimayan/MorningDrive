@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace General { 
-    public class ScrollTextureHandler : Singleton<ScrollTextureHandler>
+    public class ScrollTextureHandler : MonoBehaviour
     {
 
         ///////////////////////////////
@@ -22,7 +22,7 @@ namespace General {
         private Renderer _render;
         private  bool _active;
         private  float _currentSpeed=0;
-        private GameStateManager _gameState { get { return GameStateManager.Instance; } }
+        private GameState _currentState;
 
         ///////////////////////////////
         //  PRIVATE METHODS           //
@@ -39,6 +39,8 @@ namespace General {
 
         private void Awake()
         {
+            _currentState = Resources.Load<GameState>("CurrentState");
+            _currentState.ScrollTextureHandler = this;
             _render = GetComponent<Renderer>();
             _topSpeed = 8;
         }
@@ -57,19 +59,18 @@ namespace General {
         ///////////////////////////////
         //  PUBLIC API               //
         ///////////////////////////////
-        public GameState MyState
+        public GameStateType MyState
         {
             set
             {
                 switch (value)
                 {
-                    case GameState.Playing:
-                        print(value);
+                    case GameStateType.Playing:
                         _active = true;
                         _currentSpeed = 0;
                         SpeedUp();
                         break;
-                    case GameState.Ending:
+                    case GameStateType.Ending:
                         _active = false;
                         break;
                 }

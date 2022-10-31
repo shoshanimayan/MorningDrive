@@ -6,7 +6,7 @@ using UI;
 using UnityEngine;
 using Window;
 using Audio;
-public enum GameState { Loading, Menu, Playing, Ending }
+public enum GameStateType { Loading, Menu, Playing, Ending }
 
 namespace General
 {
@@ -17,13 +17,12 @@ namespace General
         ///////////////////////////////
         //  PRIVATE VARIABLES         //
         ///////////////////////////////
-        private GameState _state= GameState.Loading;
+     //   private GameStateType _state= GameStateType.Loading;
         private SceneLoader _sceneLoader;
         private GameplayManger _gameplayManger;
         private UIHandler _uIHandler;
-        private DrawOnTexture _window;
+        private GameState _currentState;
 
-        private ScrollTextureHandler _scrollTextureHandler { get { return ScrollTextureHandler.Instance; } }
         private AudioManager _audioManager { get { return AudioManager.Instance; } }
 
         ///////////////////////////////
@@ -31,8 +30,8 @@ namespace General
         ///////////////////////////////
         private void Awake()
         {
+            _currentState = Resources.Load<GameState>("CurrentState");
             Application.targetFrameRate = 90;
-
             _sceneLoader = GetComponent<SceneLoader>();
             _gameplayManger = GetComponent<GameplayManger>();
             _uIHandler = GetComponent<UIHandler>();
@@ -49,71 +48,68 @@ namespace General
         //  PUBLIC API               //
         ///////////////////////////////
 
-        public float PlayLength=1;
+       // public float PlayLength=1;
 
-        public GameState State
+        public GameStateType State
         {
             get
             {
-                return _state;
+                return _currentState.State;
             }
              set
             {
-                if (_state == value) return;
-                _state = value;
+               
+                if (_currentState.State == value) return;
+                _currentState.State = value;
 
-                switch (_state)
+                switch (value)
                 {
-                    case GameState.Menu:
+                    case GameStateType.Menu:
                         _uIHandler.ShowMenuUI();
-                        _window.SetClearAge(10);
-                        _window.SetRadius(0);
+                        _currentState.Window.SetClearAge(10);
+                        _currentState.Window.SetRadius(0);
                         _audioManager.PlayMusicAudio();
                         break;
 
-                    case GameState.Loading:
+                    case GameStateType.Loading:
                         _uIHandler.ShowLoadingUI();
                         break;
 
-                    case GameState.Ending:
+                    case GameStateType.Ending:
                         _audioManager.StopCarAudio();
-                        _window.SetRadius(0);
+                        _currentState.Window.SetRadius(0);
                         _uIHandler.ShowEndGameUI();
-                        _scrollTextureHandler.MyState = _state;
+                        _currentState.ScrollTextureHandler.MyState = value;
                         break;
 
-                    case GameState.Playing:
-                        _window.SetRadius(10);
+                    case GameStateType.Playing:
+                        _currentState.Window.SetRadius(10);
                         _uIHandler.StartGameUI();
-                        _gameplayManger.MaxTime = PlayLength;
                         _gameplayManger.StartGame();
                         _audioManager.StopMusicAudio();
                         _audioManager.PlayCarAudio();
-                        _scrollTextureHandler.MyState = _state;
+                        _currentState.ScrollTextureHandler.MyState = value;
                         break;
                 }
             }
         }
 
 
-        public void SetWindow(DrawOnTexture window)
-        {
-            _window = window;
-        }
+        
 
         public void ToMenu()
         {
-            State = GameState.Menu;
+            State = GameStateType.Menu;
         }
 
         public void ToEnd()
         {
-            State = GameState.Ending;
+            State = GameStateType.Ending;
         }
 
         public void ToPlay()
         {
-            State = GameState.Playing;
+            State = GameStateType.Playing;
         }
 
         public void ToExit()

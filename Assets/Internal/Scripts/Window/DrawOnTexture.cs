@@ -21,25 +21,28 @@ namespace Window
 		private Texture2D _texture;
 		private Camera cam;
 		private AudioManager _audioManager { get { return AudioManager.Instance; } }
-		private GameStateManager _gameStateManager { get { return GameStateManager.Instance; } }
+		private GameState _currentState;
 
 		///////////////////////////////
 		//  PRIVATE METHODS           //
 		///////////////////////////////
-		private void Start()
+		private void Awake()
 		{
+			_currentState = Resources.Load<GameState>("CurrentState");
+			_currentState.Window = this;
 			_texture = new Texture2D(_textureSize, _textureSize, TextureFormat.RFloat, false, true);
 			cam = Camera.main;
 			_texture.Apply();
 			_destinationRenderer.material.SetTexture("_MouseMap", _texture);
-			_destinationRenderer.material.SetFloat("_MaxAge",0);
-			_gameStateManager.SetWindow(this);
+			_destinationRenderer.material.SetFloat("_MaxAge", 0);
+
 		}
+		
 
 
 		private void OnMouseUp()
 		{
-			if (_gameStateManager.State == GameState.Playing)
+			if (_currentState.State == GameStateType.Playing)
 			{
 				_audioManager.PlayWipeAudio();
 			}
