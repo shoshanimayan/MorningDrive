@@ -19,7 +19,7 @@ namespace GamePlay
         //  PRIVATE VARIABLES         //
         ///////////////////////////////
 
-        private Vector3 _origin;
+        private bool _createdTweens=false;
 
         ///////////////////////
         //  PRIVATE METHODS  //
@@ -28,25 +28,29 @@ namespace GamePlay
         {
             EventConstants.ToEnd.RegisterListener(this);
             EventConstants.StartTweensEvent.RegisterListener(this);
-            if (_trees[0])
-            {
-                _origin = _trees[0].transform.position;
-            }
+           
 
         }
         private void KillTweens()
         {
-            DOTween.KillAll();
+            DOTween.PauseAll();
         }
 
 
         private async void StartTweens()
         {
-            foreach (GameObject tree in _trees)
+            if (!_createdTweens)
             {
-                await Task.Delay(1000);
-                tree.transform.DOMoveX(_treeEndPoint.position.x, 4).SetLoops(-1, LoopType.Restart);
+                foreach (GameObject tree in _trees)
+                {
+                    await Task.Delay(1000);
+                    tree.transform.DOMoveX(_treeEndPoint.position.x, 4).SetLoops(-1, LoopType.Restart);
 
+                }
+            }
+            else
+            {
+                DOTween.PlayAll();
             }
         }
 
