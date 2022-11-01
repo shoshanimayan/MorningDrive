@@ -11,44 +11,58 @@ public enum GameStateType { Loading, Menu, Playing, Ending }
 namespace General
 {
 
-    public class GameStateManager : Singleton<GameStateManager>
+    public class GameStateManager : EventListener
     {
 
         ///////////////////////////////
         //  PRIVATE VARIABLES         //
         ///////////////////////////////
-     //   private GameStateType _state= GameStateType.Loading;
-        private SceneLoader _sceneLoader;
-        private GameplayManger _gameplayManger;
-        private UIHandler _uIHandler;
         private GameState _currentState;
 
-        private AudioManager _audioManager { get { return AudioManager.Instance; } }
 
         ///////////////////////////////
         //  PRIVATE METHODS           //
         ///////////////////////////////
         private void Awake()
         {
-            _currentState = Resources.Load<GameState>("CurrentState");
+
+            _currentState = Resources.Load<GameState>("CurrentState");           
+
+            EventConstants.ToMenu.RegisterListener(this);
+            EventConstants.ToLoading.RegisterListener(this);
+            EventConstants.ToPlay.RegisterListener(this);
+            EventConstants.ToEnd.RegisterListener(this);
+
             Application.targetFrameRate = 90;
-            _sceneLoader = GetComponent<SceneLoader>();
-            _gameplayManger = GetComponent<GameplayManger>();
-            _uIHandler = GetComponent<UIHandler>();
-            _uIHandler.ShowLoadingUI();
+           
+            EventConstants.ToLoading.Raise();
         }
 
         private void Start()
         {
-            _sceneLoader.FirstLoad();
+
+            EventConstants.LoadSceneEvent.Raise();
         }
 
+        private void GoToMenu()
+        {
+            State = GameStateType.Menu;
+        }
+
+        private void GoToEnd()
+        {
+            State = GameStateType.Ending;
+        }
+
+        private void GoToPlay()
+        {
+            State = GameStateType.Playing;
+        }
 
         ///////////////////////////////
         //  PUBLIC API               //
         ///////////////////////////////
 
-       // public float PlayLength=1;
 
         public GameStateType State
         {
@@ -58,64 +72,50 @@ namespace General
             }
              set
             {
-               
-                if (_currentState.State == value) return;
-                _currentState.State = value;
-
-                switch (value)
+                if (_currentState)
                 {
-                    case GameStateType.Menu:
-                        _uIHandler.ShowMenuUI();
-                        _currentState.Window.SetClearAge(10);
-                        _currentState.Window.SetRadius(0);
-                        _audioManager.PlayMusicAudio();
-                        break;
-
-                    case GameStateType.Loading:
-                        _uIHandler.ShowLoadingUI();
-                        break;
-
-                    case GameStateType.Ending:
-                        _audioManager.StopCarAudio();
-                        _currentState.Window.SetRadius(0);
-                        _uIHandler.ShowEndGameUI();
-                        _currentState.ScrollTextureHandler.MyState = value;
-                        break;
-
-                    case GameStateType.Playing:
-                        _currentState.Window.SetRadius(10);
-                        _uIHandler.StartGameUI();
-                        _gameplayManger.StartGame();
-                        _audioManager.StopMusicAudio();
-                        _audioManager.PlayCarAudio();
-                        _currentState.ScrollTextureHandler.MyState = value;
-                        break;
+                    if (_currentState.State == value) return;
+                    _currentState.State = value;
                 }
             }
         }
 
 
-        
-
         public void ToMenu()
         {
-            State = GameStateType.Menu;
-        }
-
-        public void ToEnd()
-        {
-            State = GameStateType.Ending;
+            EventConstants.ToMenu.Raise();
         }
 
         public void ToPlay()
         {
-            State = GameStateType.Playing;
+            EventConstants.ToPlay.Raise();
         }
-
-        public void ToExit()
+        
+        public void GoToExit()
         {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
             Application.Quit();
         }
 
+        public override void OnEventRaised(string gameEventName)
+        {
+            switch (gameEventName)
+            {
+                case "ToMenu":
+                    GoToMenu();
+                    break;
+                case "ToPlay":
+                    GoToPlay();
+                    break;
+                case "ToLoading":
+                    
+                    break;
+                case "ToEnd":
+                    GoToEnd();
+                    break;
+            }
+        }
     }
 }

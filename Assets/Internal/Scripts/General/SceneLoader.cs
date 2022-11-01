@@ -9,7 +9,7 @@ using Window;
 
 namespace General
 {
-    public class SceneLoader : MonoBehaviour
+    public class SceneLoader : EventListener
     {
         /////////////////////////
         // INSPECTOR VARIABLES //
@@ -20,22 +20,20 @@ namespace General
         private AssetReference _envScene;
 
 
-        /////////////////////////
-        //  PRIVATE VARIABLES  //
-        /////////////////////////
-        private GameStateManager _gameState { get { return GameStateManager.Instance; } }
-
         ///////////////////////
         //  PRIVATE METHODS  //
         ///////////////////////
-        
+        private void Awake()
+        {
+            EventConstants.LoadSceneEvent.RegisterListener(this);
+        }
 
         private void SceneLoadCompleted(AsyncOperationHandle<SceneInstance> obj)
         {
             if (obj.Status == AsyncOperationStatus.Succeeded)
             {
-               
-                    _gameState.State = GameStateType.Menu;
+
+                EventConstants.ToMenu.Raise();
             }
             else
             {
@@ -55,14 +53,25 @@ namespace General
             }
         }
 
+        private void FirstLoad()
+        {
+            Addressables.LoadSceneAsync(_firstScene, UnityEngine.SceneManagement.LoadSceneMode.Additive).Completed += FirstSceneLoadCompleted;
+        }
         //////////////////
         //  PUBLIC API  //
         /////////////////
 
-        public void FirstLoad()
-        {
-            Addressables.LoadSceneAsync(_firstScene, UnityEngine.SceneManagement.LoadSceneMode.Additive).Completed += FirstSceneLoadCompleted;
-        }
 
+
+        public override void OnEventRaised(string gameEventName)
+        {
+            switch (gameEventName)
+            {
+                case "LoadSceneEvent":
+                    FirstLoad();
+                    break;
+                
+            }
+        }
     }
 }

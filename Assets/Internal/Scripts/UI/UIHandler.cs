@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class UIHandler : MonoBehaviour
+    public class UIHandler : EventListener
     {
 
         ///////////////////////////////
@@ -30,14 +30,16 @@ namespace UI
         ///////////////////////////////
         //  PRIVATE VARIABLES         //
         ///////////////////////////////
-      ///  private GameStateManager _gameState { get { return GameStateManager.Instance; } }
         private bool _showTip = false;
         private GameState _currentState;
 
         private void Awake()
         {
             _currentState = Resources.Load<GameState>("CurrentState");
-
+            EventConstants.ToMenu.RegisterListener(this);
+            EventConstants.ToLoading.RegisterListener(this);
+            EventConstants.ToPlay.RegisterListener(this);
+            EventConstants.ToEnd.RegisterListener(this);
             _menuUI.enabled = false;
             _endUI.enabled = false;
             _gameUI.enabled = false;
@@ -121,15 +123,13 @@ namespace UI
 
         }
 
-        ///////////////////////////////
-        //  PUBLIC API               //
-        ///////////////////////////////
+        
 
-        public void HideHintText()
+        private void HideHintText()
         {
             Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), true);
         }
-        public void ShowMenuUI() 
+        private void ShowMenuUI() 
         {
            
             HideAllUI();
@@ -139,7 +139,7 @@ namespace UI
 
         }
 
-        public void ShowEndGameUI()
+        private void ShowEndGameUI()
         {
             HideAllUI();
             _showTip = false;
@@ -150,21 +150,21 @@ namespace UI
 
         }
 
-        public void ShowLoadingUI()
+        private void ShowLoadingUI()
         {
             HideAllUI();           
             _loadingUI.enabled = true;
             _loadingSphere.SetActive(true);
         }
 
-        public  void ShowHintText() {
+        private void ShowHintText() {
             _hintUI.enabled = true;
              Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), false);
             _showTip = true;
 
         }
 
-        public void StartGameUI() {
+        private void StartGameUI() {
             HideAllUI();
             _gameUI.enabled = true;
             Task t = FadeInOut(_gameUI.GetComponent<CanvasGroup>(), false);
@@ -172,11 +172,18 @@ namespace UI
         }
 
 
-        public void SetLengthText(Slider Length) 
+
+
+        ///////////////////////////////
+        //  PUBLIC API               //
+        ///////////////////////////////
+
+        public void SetLengthText(Slider Length)
         {
-            if (Length.value > 1) {
-                _LengthText.text = "Length: "+Length.value.ToString()+" minutes";
-                    }
+            if (Length.value > 1)
+            {
+                _LengthText.text = "Length: " + Length.value.ToString() + " minutes";
+            }
             else
             {
                 _LengthText.text = "Length: 1 minute";
@@ -185,5 +192,23 @@ namespace UI
             _currentState.PlayLength = Length.value;
         }
 
+        public override void OnEventRaised(string gameEventName)
+        {
+            switch (gameEventName)
+            {
+                case "ToMenu":
+                    ShowMenuUI();
+                    break;
+                case "ToPlay":
+                    StartGameUI();
+                    break;
+                case "ToLoading":
+                    ShowLoadingUI();
+                    break;
+                case "ToEnd":
+                    ShowEndGameUI();
+                    break;
+            }
+        }
     }
 }

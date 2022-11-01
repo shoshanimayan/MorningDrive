@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace General { 
-    public class ScrollTextureHandler : MonoBehaviour
+    public class ScrollTextureHandler : EventListener
     {
 
         ///////////////////////////////
@@ -22,7 +22,6 @@ namespace General {
         private Renderer _render;
         private  bool _active;
         private  float _currentSpeed=0;
-        private GameState _currentState;
 
         ///////////////////////////////
         //  PRIVATE METHODS           //
@@ -34,15 +33,17 @@ namespace General {
                 await  Task.Yield();
                 _currentSpeed += Time.deltaTime;
             }
-            _currentSpeed = 50; ;
+            _currentSpeed = 50; 
         }
 
         private void Awake()
         {
-            _currentState = Resources.Load<GameState>("CurrentState");
-            _currentState.ScrollTextureHandler = this;
             _render = GetComponent<Renderer>();
             _topSpeed = 8;
+
+          
+            EventConstants.ToPlay.RegisterListener(this);
+            EventConstants.ToEnd.RegisterListener(this);
         }
 
         
@@ -56,24 +57,28 @@ namespace General {
  
         }
 
+        
+
         ///////////////////////////////
         //  PUBLIC API               //
         ///////////////////////////////
-        public GameStateType MyState
+      
+
+        public override void OnEventRaised(string gameEventName)
         {
-            set
+            switch (gameEventName)
             {
-                switch (value)
-                {
-                    case GameStateType.Playing:
-                        _active = true;
-                        _currentSpeed = 0;
-                        SpeedUp();
-                        break;
-                    case GameStateType.Ending:
-                        _active = false;
-                        break;
-                }
+                
+                case "ToPlay":
+                    _active = true;
+                    _currentSpeed = 0;
+                    SpeedUp();
+                    break;
+
+                case "ToEnd":
+                    _active = false;
+
+                    break;
             }
         }
 

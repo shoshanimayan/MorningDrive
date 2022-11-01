@@ -8,7 +8,7 @@ using Audio;
 
 namespace GamePlay
 {
-    public class GameplayManger : MonoBehaviour
+    public class GameplayManger : EventListener
     {
         ///////////////////////////////
         //  INSPECTOR VARIABLES      //
@@ -22,12 +22,27 @@ namespace GamePlay
         private float _timer = 0;
         private bool _playing;
 
-        private EnvironmentHandler _environmentHandler;
         private Camera _camera;
 
-        private AudioManager _audioManager { get { return AudioManager.Instance; } }
-         private GameStateManager _gameState { get { return GameStateManager.Instance; } }
         private GameState _currentState;
+
+        private bool Playing
+        {
+            get { return _playing; }
+            set
+            {
+                if (_playing == value)
+                    return;
+                if (value)
+                {
+                    SetCameraShake();
+                    StartTweensWithWait(5);
+                }
+
+
+            }
+
+        }
 
         ///////////////////////////////
         //  PRIVATE METHODS           //
@@ -35,10 +50,11 @@ namespace GamePlay
 
         private void Awake()
         {
-
+            
             _currentState = Resources.Load<GameState>("CurrentState");
-            _environmentHandler = GetComponent<EnvironmentHandler>();
             _camera = Camera.main;
+            EventConstants.ToPlay.RegisterListener(this);
+
         }
 
         private async Task RunProgress() 
@@ -74,19 +90,18 @@ namespace GamePlay
         private async void StartTweensWithWait(int seconds)
         {
             await Task.Delay(seconds * 1000);
-             Task t =_environmentHandler.StartTweens();
+            EventConstants.StartTweensEvent.Raise();
         }
 
         private void EndGame()
         {
-            _environmentHandler.KillTweens();
             Playing = false;
-            _gameState.ToEnd();
+            EventConstants.ToEnd.Raise();
         }
 
         private void CameraShake()
         {
-            _audioManager.PlaySpeedBumpAudio();
+            EventConstants.SpeedBumpEvent.Raise();
             Shake(.5f,.2f);
         }
 
@@ -99,36 +114,32 @@ namespace GamePlay
             CameraShake();
         }
 
-       
-        ///////////////////////////////
-        //  PUBLIC API               //
-        ///////////////////////////////
-        public bool Playing
-        {
-            get { return _playing; }
-            private set
-            {
-                if (_playing == value)
-                    return;
-                if (value)
-                {
-                    SetCameraShake();
-                    StartTweensWithWait(5);
-                }
-
-
-            }
-
-        }
-
-       
-
-        public void StartGame()
+        private void StartGame()
         {
             _timer = 0;
             _maxTime = _currentState.PlayLength * 60;
             Playing = true;
             Task t = RunProgress();
+        }
+
+        ///////////////////////////////
+        //  PUBLIC API               //
+        ///////////////////////////////
+
+
+
+
+
+        public override void OnEventRaised(string gameEventName)
+        {
+            switch (gameEventName)
+            {
+               
+                case "ToPlay":
+                    StartGame();
+                    break;
+               
+            }
         }
     }
 }

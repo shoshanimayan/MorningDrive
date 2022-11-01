@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Audio
 {
-    public class AudioManager : Singleton<AudioManager>
+    public class AudioManager : EventListener
     {
         ///////////////////////////////
         //  INSPECTOR VARIABLES      //
@@ -23,7 +23,15 @@ namespace Audio
         ///////////////////////////////
         //  PRIVATE METHODS           //
         ///////////////////////////////
+        private void Awake()
+        {
+            EventConstants.ToMenu.RegisterListener(this);
+            EventConstants.ToPlay.RegisterListener(this);
+            EventConstants.ToEnd.RegisterListener(this);
+            EventConstants.WipeEvent.RegisterListener(this);
+            EventConstants.SpeedBumpEvent.RegisterListener(this);
 
+        }
         private async void FadeOutAudio(AudioSource source, float fadeTime)
         {
             float startVolume = source.volume;
@@ -59,44 +67,66 @@ namespace Audio
     
         }
 
+        private async void PlayCarAudio()
+        {
+            _carAudio.PlayOneShot(_carStart);
+            await Task.Delay((int)_carStart.length * 1000);
+            PlayAudio(_carAudio, true);
+        }
+
+        private void PlaySpeedBumpAudio()
+        {
+            PlayAudio(_speedBumpAudio, true);
+        }
+
+        private void PlayMusicAudio()
+        {
+            PlayAudio(_menuAudio, true);
+        }
+
+        private void StopCarAudio()
+        {
+            PlayAudio(_carAudio, false, true);
+        }
+
+        private void StopMusicAudio()
+        {
+            PlayAudio(_menuAudio, false, true);
+        }
+
+        private void PlayWipeAudio()
+        {
+            PlayAudio(_wipeAudio, true);
+        }
 
         ///////////////////////////////
         //  PUBLIC API               //
         ///////////////////////////////
 
-        public async void PlayCarAudio()
+
+
+        public override void OnEventRaised(string gameEventName)
         {
-            _carAudio.PlayOneShot(_carStart);
-            await Task.Delay((int)_carStart.length*1000);
-            PlayAudio(_carAudio,true);
+            switch (gameEventName)
+            {
+                case "ToMenu":
+                    PlayMusicAudio();
+                    break;
+                case "ToPlay":
+                    StopMusicAudio();
+                    PlayCarAudio();
+                    break;
+                case "ToEnd":
+                    StopCarAudio();
+                    break;
+
+                case "SpeedBumpEvent":
+                    PlaySpeedBumpAudio();
+                    break;
+                case "WipeEvent":
+                    PlayWipeAudio();
+                    break;
+            }
         }
-
-        public void PlaySpeedBumpAudio()
-        {
-            PlayAudio(_speedBumpAudio,true);
-        }
-
-        public void PlayMusicAudio()
-        {
-            PlayAudio(_menuAudio, true);
-        }
-
-        public void StopCarAudio()
-        {
-            PlayAudio(_carAudio,false,true);
-        }
-
-        public void StopMusicAudio()
-        {
-            PlayAudio(_menuAudio, false,true);
-        }
-
-        public void PlayWipeAudio()
-        {
-            PlayAudio(_wipeAudio, true);
-        }
-
-       
-
     }
 }

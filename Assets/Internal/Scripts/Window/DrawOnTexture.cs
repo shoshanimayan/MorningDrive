@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Window
 {
-	public class DrawOnTexture : MonoBehaviour
+	public class DrawOnTexture : EventListener
 	{
 		///////////////////////////////
 		//  INSPECTOR VARIABLES      //
@@ -20,7 +20,6 @@ namespace Window
 		///////////////////////////////
 		private Texture2D _texture;
 		private Camera cam;
-		private AudioManager _audioManager { get { return AudioManager.Instance; } }
 		private GameState _currentState;
 
 		///////////////////////////////
@@ -29,22 +28,28 @@ namespace Window
 		private void Awake()
 		{
 			_currentState = Resources.Load<GameState>("CurrentState");
-			_currentState.Window = this;
 			_texture = new Texture2D(_textureSize, _textureSize, TextureFormat.RFloat, false, true);
 			cam = Camera.main;
 			_texture.Apply();
 			_destinationRenderer.material.SetTexture("_MouseMap", _texture);
 			_destinationRenderer.material.SetFloat("_MaxAge", 0);
 
+
+			EventConstants.ToMenu.RegisterListener(this);
+			EventConstants.ToPlay.RegisterListener(this);
+			EventConstants.ToEnd.RegisterListener(this);
+			
+
 		}
-		
+
 
 
 		private void OnMouseUp()
 		{
 			if (_currentState.State == GameStateType.Playing)
 			{
-				_audioManager.PlayWipeAudio();
+				EventConstants.WipeEvent.Raise();
+
 			}
 		}
 
@@ -79,20 +84,40 @@ namespace Window
 			}
 		}
 
-		///////////////////////////////
-		//  PUBLIC API               //
-		///////////////////////////////
-
-		public void SetClearAge(float time)
+		private void SetClearAge(float time)
 		{
 			_destinationRenderer.material.SetFloat("_MaxAge", time);
 
 		}
 
-		public void SetRadius(float radius)
+		private void SetRadius(float radius)
 		{
 			_radius = radius;
 		}
 
+		///////////////////////////////
+		//  PUBLIC API               //
+		///////////////////////////////
+
+
+
+		public override void OnEventRaised(string gameEventName)
+		{
+			switch (gameEventName)
+			{
+				case "ToMenu":
+					SetClearAge(10);
+					SetRadius(0);
+
+					break;
+				case "ToPlay":
+					SetRadius(10);
+					break;
+
+				case "ToEnd":
+					SetRadius(0);
+					break;
+			}
+		}
 	}
 }

@@ -9,14 +9,12 @@ public class GameState : ScriptableObject
 {
     public GameStateType State;
     public float PlayLength;
-    public DrawOnTexture Window;
-    public ScrollTextureHandler ScrollTextureHandler;
+
 
     private void OnEnable()
     {
         State = GameStateType.Loading;
         PlayLength = 1;
-        Window = null;
-        ScrollTextureHandler = null;
+        
     }
 }
