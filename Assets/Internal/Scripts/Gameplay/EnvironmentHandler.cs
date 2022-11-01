@@ -47,6 +47,7 @@ namespace GamePlay
                     tree.transform.DOMoveX(_treeEndPoint.position.x, 4).SetLoops(-1, LoopType.Restart);
 
                 }
+                _createdTweens = true;
             }
             else
             {
