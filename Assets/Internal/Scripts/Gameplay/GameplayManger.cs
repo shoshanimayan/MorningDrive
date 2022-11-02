@@ -36,7 +36,8 @@ namespace GamePlay
                 if (value)
                 {
                     SetCameraShake();
-                    StartTweensWithWait(5);
+                    EventConstants.StartTweensEvent.Raise();
+
                 }
 
 
@@ -57,7 +58,7 @@ namespace GamePlay
 
         }
 
-        private async Task RunProgress() 
+        private async void RunProgress() 
         {
             while (_timer < _maxTime)
             {
@@ -87,11 +88,7 @@ namespace GamePlay
             _camera.transform.position = orignalPosition;
         }
 
-        private async void StartTweensWithWait(int seconds)
-        {
-            await Task.Delay(seconds * 1000);
-            EventConstants.StartTweensEvent.Raise();
-        }
+        
 
         private void EndGame()
         {
@@ -119,7 +116,7 @@ namespace GamePlay
             _timer = 0;
             _maxTime = _currentState.PlayLength * 60;
             Playing = true;
-            Task t = RunProgress();
+            RunProgress();
         }
 
         ///////////////////////////////

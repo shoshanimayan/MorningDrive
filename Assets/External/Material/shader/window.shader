@@ -15,12 +15,10 @@
             "Queue" = "Transparent"
         }
 
-        // Grab the screen behind the object into _BGTex
         GrabPass
         {
             "_BGTex"
         }
-
 
 		Pass
 		{
@@ -67,13 +65,10 @@
 			float4 frag(vertexOutput input) : COLOR
 			{
 				float4 bg = tex2Dproj(_BGTex, input.grabPos);
-				// younger = redder
 				float timeDrawn = tex2D(_MouseMap, input.texCoord.xy).r;
 				float age = clamp(_Time.y - timeDrawn, 0.0001, _Time.y);
 				float percentMaxAge = saturate(age / _MaxAge); 
-				//return float4(percentMaxAge, 0, 0, 1); 
 				
-				// older = higher percentMaxAge = more blur
 				float blurRadius = _BlurRadius * percentMaxAge;
 				float4 color = (1-percentMaxAge)*_ClearColor + percentMaxAge*_FogColor;
 
@@ -81,10 +76,7 @@
 				float4 blurY = gaussianBlur(float2(0,1), input.grabPos, _BGTex_TexelSize.w, _BGTex, blurRadius);
 				return (blurX + blurY) * color;
 
-				// TEST
-				//float blurRadius = floor(_BlurRadius * mouseSample.r);
-				//return mouseSample; // test mouse map
-				//float noSmudge = mouseSample.r != 0; // test erasing blur
+				
 			}
 
 			ENDCG

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-
+using Web;
 namespace UI
 {
     public class UIHandler : EventListener
@@ -20,12 +20,15 @@ namespace UI
         [SerializeField] private Canvas _endUI;
         [SerializeField] private Canvas _gameUI;
         [SerializeField] private Canvas _hintUI;
+        
 
         [Header("Loading Sphere")]
         [SerializeField] private GameObject _loadingSphere;
 
         [Header("Main Menu Elements")]
-        [SerializeField] TextMeshProUGUI _LengthText;
+        [SerializeField] TextMeshProUGUI _lengthText;
+        [SerializeField] TextMeshProUGUI _wordOfTheDayText;
+
 
         ///////////////////////////////
         //  PRIVATE VARIABLES         //
@@ -45,6 +48,8 @@ namespace UI
             _gameUI.enabled = false;
             _hintUI.enabled = false;
             _loadingUI.enabled = false;
+            _wordOfTheDayText.enabled = false;
+
 
         }
 
@@ -59,7 +64,7 @@ namespace UI
             }
         }
 
-        private async Task FadeInOut(CanvasGroup canvas, bool fade)
+        private async void  FadeInOutCanvas(CanvasGroup canvas, bool fade)
         {
             canvas.interactable = false;
             if (fade)
@@ -89,6 +94,22 @@ namespace UI
             }
         }
 
+        private async void FadeInText(TextMeshProUGUI text)
+        {
+            
+            var color = text.color;
+            float alpha = 0;
+            text.enabled = true;
+            text.color = new Color(color.r, color.g, color.b, alpha);
+            while (text.color.a < 1)
+            {
+                alpha += Time.deltaTime;
+                text.color = new Color(color.r, color.g, color.b, alpha);
+                await Task.Yield();
+
+            }
+        }
+
         private async void ShowTipWithWait(int seconds)
         {
             await Task.Delay(seconds * 1000);
@@ -104,18 +125,18 @@ namespace UI
 
             if (_menuUI.enabled)
             {
-                Task t = FadeInOut(_menuUI.GetComponent<CanvasGroup>(), true);
+                 FadeInOutCanvas(_menuUI.GetComponent<CanvasGroup>(), true);
               
             }
             if (_endUI.enabled)
             {
-                Task t = FadeInOut(_endUI.GetComponent<CanvasGroup>(), true);
+                 FadeInOutCanvas(_endUI.GetComponent<CanvasGroup>(), true);
 
                
             }
             if (_gameUI.enabled)
             {
-                Task t = FadeInOut(_gameUI.GetComponent<CanvasGroup>(), true);
+               FadeInOutCanvas(_gameUI.GetComponent<CanvasGroup>(), true);
 
                 
             }
@@ -123,19 +144,31 @@ namespace UI
 
         }
 
-        
+
+        private async void GetRandomWordOfTheDay()
+        {
+            _wordOfTheDayText.enabled = false;
+            var word = await new RandomWordCall().GetRandomWord();
+            if (word != null)
+            {
+                _wordOfTheDayText.text = "Random Word Of The Day: " + word;
+                FadeInText(_wordOfTheDayText);
+            }
+            
+        }
+
 
         private void HideHintText()
         {
-            Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), true);
+             FadeInOutCanvas(_hintUI.GetComponent<CanvasGroup>(), true);
         }
         private void ShowMenuUI() 
         {
            
             HideAllUI();
             _menuUI.enabled = true;
-
-            Task t = FadeInOut(_menuUI.GetComponent<CanvasGroup>(), false);
+            GetRandomWordOfTheDay();
+            FadeInOutCanvas(_menuUI.GetComponent<CanvasGroup>(), false);
 
         }
 
@@ -146,7 +179,7 @@ namespace UI
             HideHintText();
 
             _endUI.enabled = true;
-            Task t = FadeInOut(_endUI.GetComponent<CanvasGroup>(), false);
+            FadeInOutCanvas(_endUI.GetComponent<CanvasGroup>(), false);
 
         }
 
@@ -159,7 +192,7 @@ namespace UI
 
         private void ShowHintText() {
             _hintUI.enabled = true;
-             Task t = FadeInOut(_hintUI.GetComponent<CanvasGroup>(), false);
+              FadeInOutCanvas(_hintUI.GetComponent<CanvasGroup>(), false);
             _showTip = true;
 
         }
@@ -167,12 +200,12 @@ namespace UI
         private void StartGameUI() {
             HideAllUI();
             _gameUI.enabled = true;
-            Task t = FadeInOut(_gameUI.GetComponent<CanvasGroup>(), false);
+             FadeInOutCanvas(_gameUI.GetComponent<CanvasGroup>(), false);
             ShowTipWithWait(5);
         }
 
 
-
+      
 
         ///////////////////////////////
         //  PUBLIC API               //
@@ -182,11 +215,11 @@ namespace UI
         {
             if (Length.value > 1)
             {
-                _LengthText.text = "Length: " + Length.value.ToString() + " minutes";
+                _lengthText.text = "Length: " + Length.value.ToString() + " minutes";
             }
             else
             {
-                _LengthText.text = "Length: 1 minute";
+                _lengthText.text = "Length: 1 minute";
 
             }
             _currentState.PlayLength = Length.value;
@@ -211,4 +244,6 @@ namespace UI
             }
         }
     }
+
+   
 }

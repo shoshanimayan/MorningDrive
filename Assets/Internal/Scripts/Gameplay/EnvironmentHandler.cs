@@ -36,11 +36,15 @@ namespace GamePlay
             DOTween.PauseAll();
         }
 
+        private async void StartTweensWithWait(int seconds)
+        {
+            await Task.Delay(seconds * 1000);
+            StartTweens();
+        }
 
         private async void StartTweens()
         {
-            if (!_createdTweens)
-            {
+            
                 foreach (GameObject tree in _trees)
                 {
                     await Task.Delay(1000);
@@ -48,11 +52,8 @@ namespace GamePlay
 
                 }
                 _createdTweens = true;
-            }
-            else
-            {
-                DOTween.PlayAll();
-            }
+            
+            
         }
 
         ///////////////////////////////
@@ -68,7 +69,14 @@ namespace GamePlay
                     KillTweens();
                     break;
                 case "StartTweensEvent":
-                    StartTweens();
+                    if (!_createdTweens)
+                    {
+                        StartTweensWithWait(5);
+                    }
+                    else
+                    {
+                        DOTween.PlayAll();
+                    }
                     break;
 
             }
