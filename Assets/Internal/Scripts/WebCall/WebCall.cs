@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 namespace Web
 {
 
-    public class WebCall : MonoBehaviour
+    public class WebCall 
     {
         ///////////////////////////////
         //  Protected methods        //
@@ -33,7 +33,7 @@ namespace Web
             else
             {
 
-                Debug.LogError("Could Not Retrieve Word");
+                Debug.LogError(request.downloadHandler.text);
             }
 
 

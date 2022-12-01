@@ -22,6 +22,9 @@ namespace Web
         public async Task<string> GetRandomWord()
         {
             string json= await ApiGet(WebCallConstants.RandomWordAddress);
+            json=json.Replace("[", "");
+            json=json.Replace("]", "");
+
             string word = null;
             if (json != null) {
                 try

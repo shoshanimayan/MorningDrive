@@ -148,7 +148,10 @@ namespace UI
         private async void GetRandomWordOfTheDay()
         {
             _wordOfTheDayText.enabled = false;
-            var word = await new RandomWordCall().GetRandomWord();
+            string word = null;
+#if !UNITY_WEBGL
+             word = await new RandomWordCall().GetRandomWord();
+#endif
             if (word != null)
             {
                 _wordOfTheDayText.text = "Random Word Of The Day: " + word;
