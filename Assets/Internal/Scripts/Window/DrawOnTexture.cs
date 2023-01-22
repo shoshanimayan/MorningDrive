@@ -8,23 +8,20 @@ namespace Window
 {
 	public class DrawOnTexture : EventListener
 	{
-		///////////////////////////////
 		//  INSPECTOR VARIABLES      //
-		///////////////////////////////
+
 		[SerializeField] private Renderer _destinationRenderer;
 		[SerializeField] private int _textureSize;
 		[SerializeField] private float _radius;
 
-		///////////////////////////////
 		//  PRIVATE VARIABLES         //
-		///////////////////////////////
+
 		private Texture2D _texture;
 		private Camera cam;
 		private GameState _currentState;
 
-		///////////////////////////////
 		//  PRIVATE METHODS           //
-		///////////////////////////////
+
 		private void Awake()
 		{
 			_currentState = Resources.Load<GameState>("CurrentState");
@@ -95,9 +92,7 @@ namespace Window
 			_radius = radius;
 		}
 
-		///////////////////////////////
 		//  PUBLIC API               //
-		///////////////////////////////
 
 
 

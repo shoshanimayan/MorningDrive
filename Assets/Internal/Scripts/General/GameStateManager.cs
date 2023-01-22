@@ -14,15 +14,15 @@ namespace General
     public class GameStateManager : EventListener
     {
 
-        ///////////////////////////////
+        
         //  PRIVATE VARIABLES         //
-        ///////////////////////////////
+        
         private GameState _currentState;
 
 
-        ///////////////////////////////
+        
         //  PRIVATE METHODS           //
-        ///////////////////////////////
+        
         private void Awake()
         {
 
@@ -59,9 +59,9 @@ namespace General
             State = GameStateType.Playing;
         }
 
-        ///////////////////////////////
+        
         //  PUBLIC API               //
-        ///////////////////////////////
+        
 
 
         public GameStateType State

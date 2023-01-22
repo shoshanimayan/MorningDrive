@@ -9,21 +9,20 @@ namespace GamePlay
 {
     public class EnvironmentHandler : EventListener
     {
-        ///////////////////////////////
         //  INSPECTOR VARIABLES      //
-        ///////////////////////////////
+        
         [SerializeField] GameObject[] _trees;
         [SerializeField ]private Transform _treeEndPoint;
 
-        ///////////////////////////////
+        
         //  PRIVATE VARIABLES         //
-        ///////////////////////////////
+        
 
         private bool _createdTweens=false;
 
-        ///////////////////////
+        
         //  PRIVATE METHODS  //
-        ///////////////////////
+        
         private void Awake()
         {
             EventConstants.ToEnd.RegisterListener(this);
@@ -56,9 +55,9 @@ namespace GamePlay
             
         }
 
-        ///////////////////////////////
+        
         //  PUBLIC API               //
-        ///////////////////////////////
+        
 
 
         public override void OnEventRaised(string gameEventName)

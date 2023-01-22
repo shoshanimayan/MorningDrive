@@ -10,14 +10,14 @@ namespace GamePlay
 {
     public class GameplayManger : EventListener
     {
-        ///////////////////////////////
+        
         //  INSPECTOR VARIABLES      //
-        ///////////////////////////////
+        
         [SerializeField] Slider _progressSlider;
 
-        ///////////////////////////////
+        
         //  PRIVATE VARIABLES         //
-        ///////////////////////////////
+        
         private float _maxTime ;
         private float _timer = 0;
         private bool _playing;
@@ -45,9 +45,9 @@ namespace GamePlay
 
         }
 
-        ///////////////////////////////
+        
         //  PRIVATE METHODS           //
-        ///////////////////////////////
+        
 
         private void Awake()
         {
@@ -119,9 +119,9 @@ namespace GamePlay
             RunProgress();
         }
 
-        ///////////////////////////////
+        
         //  PUBLIC API               //
-        ///////////////////////////////
+        
 
 
 

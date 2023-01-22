@@ -11,18 +11,18 @@ namespace General
 {
     public class SceneLoader : EventListener
     {
-        /////////////////////////
+        
         // INSPECTOR VARIABLES //
-        /////////////////////////
+        
         [SerializeField]
         private AssetReference _firstScene;
         [SerializeField]
         private AssetReference _envScene;
 
 
-        ///////////////////////
+        
         //  PRIVATE METHODS  //
-        ///////////////////////
+        
         private void Awake()
         {
             EventConstants.LoadSceneEvent.RegisterListener(this);
@@ -57,9 +57,9 @@ namespace General
         {
             Addressables.LoadSceneAsync(_firstScene, UnityEngine.SceneManagement.LoadSceneMode.Additive).Completed += FirstSceneLoadCompleted;
         }
-        //////////////////
+        
         //  PUBLIC API  //
-        /////////////////
+        
 
 
 

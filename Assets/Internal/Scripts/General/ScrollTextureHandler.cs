@@ -7,25 +7,25 @@ namespace General {
     public class ScrollTextureHandler : EventListener
     {
 
-        ///////////////////////////////
+        
         //  INSPECTOR VARIABLES      //
-        ///////////////////////////////
+        
         
         [SerializeField] private float _slowDown = .05f;
         [SerializeField] private float _offsetY;
         [SerializeField] private float _topSpeed = 8;
 
-        ///////////////////////////////
+        
         //  PRIVATE VARIABLES         //
-        ///////////////////////////////
+        
 
         private Renderer _render;
         private  bool _active;
         private  float _currentSpeed=0;
 
-        ///////////////////////////////
+        
         //  PRIVATE METHODS           //
-        ///////////////////////////////
+        
         private async void SpeedUp()
         {
             while (_currentSpeed < _topSpeed)
@@ -59,9 +59,9 @@ namespace General {
 
         
 
-        ///////////////////////////////
+        
         //  PUBLIC API               //
-        ///////////////////////////////
+        
       
 
         public override void OnEventRaised(string gameEventName)

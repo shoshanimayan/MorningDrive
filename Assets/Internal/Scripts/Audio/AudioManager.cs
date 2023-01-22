@@ -7,9 +7,8 @@ namespace Audio
 {
     public class AudioManager : EventListener
     {
-        ///////////////////////////////
         //  INSPECTOR VARIABLES      //
-        ///////////////////////////////
+
         [Header("Audio Sources")]
 
         [SerializeField] private AudioSource _carAudio;
@@ -20,9 +19,8 @@ namespace Audio
         [Header("Extra Audio Clips")]
         [SerializeField] private AudioClip _carStart;
 
-        ///////////////////////////////
         //  PRIVATE METHODS           //
-        ///////////////////////////////
+        
         private void Awake()
         {
             EventConstants.ToMenu.RegisterListener(this);
@@ -99,9 +97,7 @@ namespace Audio
             PlayAudio(_wipeAudio, true);
         }
 
-        ///////////////////////////////
         //  PUBLIC API               //
-        ///////////////////////////////
 
 
 

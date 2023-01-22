@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class FillScreen : MonoBehaviour
 {
-    ///////////////////////////////
+    
     //  PRIVATE VARIABLES         //
-    ///////////////////////////////
+    
     private Resolution _res;
     private Camera _cam;
 
-    ///////////////////////////////
+    
     //  PRIVATE METHODS           //
-    ///////////////////////////////
+    
     private void Start()
     {
         _res = Screen.currentResolution;

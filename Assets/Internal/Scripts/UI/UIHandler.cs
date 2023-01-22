@@ -11,9 +11,9 @@ namespace UI
     public class UIHandler : EventListener
     {
 
-        ///////////////////////////////
+        
         //  INSPECTOR VARIABLES      //
-        ///////////////////////////////
+        
         [Header("Canvases")]
         [SerializeField] private Canvas _loadingUI;
         [SerializeField] private Canvas _menuUI;
@@ -30,9 +30,9 @@ namespace UI
         [SerializeField] TextMeshProUGUI _wordOfTheDayText;
 
 
-        ///////////////////////////////
+        
         //  PRIVATE VARIABLES         //
-        ///////////////////////////////
+        
         private bool _showTip = false;
         private GameState _currentState;
 
@@ -210,9 +210,9 @@ namespace UI
 
       
 
-        ///////////////////////////////
+        
         //  PUBLIC API               //
-        ///////////////////////////////
+        
 
         public void SetLengthText(Slider Length)
         {

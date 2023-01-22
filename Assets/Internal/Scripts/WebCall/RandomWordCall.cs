@@ -16,9 +16,9 @@ namespace Web
             public string word { get; set; }
         }
 
-        ///////////////////////////////
+        
         //  PUBLIC API               //
-        ///////////////////////////////
+        
         public async Task<string> GetRandomWord()
         {
             string json= await ApiGet(WebCallConstants.RandomWordAddress);

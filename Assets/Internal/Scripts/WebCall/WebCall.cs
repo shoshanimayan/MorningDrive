@@ -6,9 +6,9 @@ namespace Web
 
     public class WebCall 
     {
-        ///////////////////////////////
+        
         //  Protected methods        //
-        ///////////////////////////////
+        
 
         protected async Task<string> ApiGet(string url)
         {
